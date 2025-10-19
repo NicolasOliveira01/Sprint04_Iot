@@ -79,9 +79,9 @@ def validar():
             break
 
     if reconhecido:
-        print("pessoa autorizada")
+        print("autorizada")
     else:
-        print("pessoa não autorizada")
+        print("não autorizada")
 
 # ---- Menu ----
 def main():

@@ -1,43 +1,43 @@
-# Reconhecimento Facial com OpenCV, MediaPipe e DeepFace
+# Reconhecimento Facial com OpenCV, Face_recognition e Numpy
 
 ## 📌 Objetivo
-Este projeto implementa um sistema local de **cadastro e validação facial** utilizando `Numpy`, `OpenCV`, `MediaPipe`, `DeepFace`, `json`, `os` e `time`. No momento, 
-ele funciona em ambiente **desktop/notebook** com webcam, em etapas futuras, será integrado a um **aplicativo mobile em React Native**, 
-permitindo que usuários se cadastrem por reconhecimento facial.
+Este projeto implementa um sistema local de **cadastro e validação facial** utilizando `Numpy`, `OpenCV`, `Face_recognition`, `json`e `os`. 
+Este projeto foi integrado em um **aplicativo mobile em React Native**, permitindo que usuários se cadastrem por reconhecimento facial.
 
 ---
 
 ## ⚙️ Como executar
-1. Primeiro certifique-se que você tenha o `CMake` e o `Visual C++ Build Tools`
-    1. CMAKE:
-    ```bash
-    cmake --version
-    ```
-   Caso não tenha instalado -> https://cmake.org/download/
-    
-    2. Visual C++ Build Tools
-    ```bash
-    Painel de controle - Programas - Programs e Recursos
-    ```
-   Caso não tenha instalado -> https://visualstudio.microsoft.com/pt-br/visual-cpp-build-tools/
-2. Clone este repositório  
+1. Clone este repositório  
     ```bash
     git clone https://github.com/NicolasOliveira01/Sprint03_Iot
     ```
-3. Instale as dependências
+2. Instale as dependências
     ```bash
     python -m venv venv
     venv\Scripts\activate
     pip install -r requirements.txt
     ```
-5. Execute o script principal:
+3. Execute o script principal:
    ```bash
    python main.py
    ```
-   
 ---
 
+## Como funciona
+
+- Cada rosto é transformado em um **embedding** (vetor numérico) usando DeepFace.  
+- Para validar um usuário, calculamos a **distância euclidiana** entre o embedding capturado e os embeddings salvos no banco.  
+- O threshold define o limite máximo dessa distância para considerar que os rostos são da mesma pessoa.  
+
+--- 
+
 ## 📦 Dependências e versões recomendadas
+
+### **face_recognition (`face_recognition`)**
+- Detecta rostos em imagens e vídeos.
+- Gera embeddings (vetores numéricos) que representam características únicas do rosto.
+- Permite comparar rostos calculando a distância entre embeddings para verificar se são da mesma pessoa.
+- Facilita autenticação facial sem necessidade de treinar modelos complexos manualmente.
 
 ### **OpenCV (`cv2`)**
 - Captura vídeo da webcam.
@@ -51,60 +51,36 @@ permitindo que usuários se cadastrem por reconhecimento facial.
 ### **OS (`os`)**
 - Verifica se o arquivo `banco.json` existe antes de carregá-lo.
 
-### **DeepFace (`deepface`)**
-- Gera embeddings faciais a partir da imagem do rosto.
-- Baseado em modelos de deep learning, neste projeto usamos **Facenet**.
-- Embeddings são normalizados para comparação entre rostos.
-
 ### **NumPy (`numpy`)**
 - Manipula arrays de embeddings.
 - Calcula distância euclidiana entre embeddings para validação do usuário.
 - Converte embeddings para listas antes de salvar no JSON.
 
-### **MediaPipe (`mediapipe`)**
-- Detecta landmarks faciais em tempo real.
-- Desenha pontos e contornos do rosto, sobrancelhas e boca.
-- Proporciona feedback visual para o usuário durante validação.
-
-### **Time (`time`)**
-- Controla a animação dos landmarks (mudança progressiva de cor).
-- Mede o tempo decorrido para definir o progresso do desenho.
-
 ---
 
 ## Funções principais
 
-### **Banco de dados**
-- `carregar_banco()`: Carrega os embeddings do arquivo `banco.json`.  
-- `salvar_banco(banco)`: Salva os embeddings no arquivo `banco.json`.  
+### **carregar_banco()**
+- Carrega os embeddings faciais salvos no arquivo `banco.json`. Retorna uma lista vazia se o arquivo não existir.
 
-### **DeepFace**
-- `gerar_embedding(frame)`: Gera o embedding facial de uma imagem capturada.  
-- `normalizar_embedding(embedding)`: Normaliza o embedding para comparação.
+### **salvar_banco(banco)**
+- Salva os embeddings faciais no arquivo `banco.json` para persistência dos dados.
 
-### **Cadastro**
-- `capturar_rosto(caption)`: Captura a imagem do rosto via webcam ao pressionar `s`.  
-- `cadastrar()`: Realiza o cadastro de um novo usuário gerando e salvando o embedding.
+### **gerar_embedding(frame)**
+- Recebe uma imagem (frame), detecta o rosto e gera um embedding normalizado usando `face_recognition`. Retorna None se não detectar rosto.
 
-### **Validação**
-- `validar()`: Captura o rosto, mostra landmarks em tempo real, e compara o embedding com o banco para validar o usuário.
+### **capturar_rosto(caption)**
+- Abre a webcam, mostra a imagem em tempo real e captura um frame quando o usuário pressiona 's'.
 
-### **Menu**
-- `main()`: Exibe o menu principal com opções de cadastro, validação ou sair do programa.
+### **cadastrar()**
+- Captura o rosto do usuário, gera o embedding e salva no banco (banco.json). Exibe mensagens de sucesso ou falha.
+
+### **validar()**
+- Captura o rosto do usuário, gera o embedding e compara com os embeddings cadastrados. Retorna no console `"autorizada"` ou `"não autorizada"`.
+
+### **main()**
+- Menu interativo para o usuário escolher entre cadastrar um novo rosto, validar um rosto ou sair do programa.
 
 ---
 
-# Threshold de Reconhecimento Facial
 
-No projeto, o **threshold** é o valor usado para determinar se um rosto capturado corresponde a um rosto cadastrado no banco de dados.
-
-## Como funciona
-
-- Cada rosto é transformado em um **embedding** (vetor numérico) usando DeepFace.  
-- Para validar um usuário, calculamos a **distância euclidiana** entre o embedding capturado e os embeddings salvos no banco.  
-- O threshold define o limite máximo dessa distância para considerar que os rostos são da mesma pessoa.  
-
-```python
-distancia = np.linalg.norm(emb_salvo - novo_embedding)
-if distancia < 0.9:  # threshold
-    reconhecido = True
