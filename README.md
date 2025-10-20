@@ -61,10 +61,8 @@ Este projeto foi integrado em um **aplicativo mobile em React Native**, permitin
 ## Scripts do projeto 
 
 ### cadastrar_rosto.py
-- Ao ser executado, ele ativa a webcam e exibe uma janela pedindo para o usuário ajustar o rosto e pressionar a tecla ‘s’ quando estiver pronto para capturar a imagem.
-- Após a captura, a imagem é processada pela biblioteca face_recognition, que gera um embedding facial (um vetor numérico que representa as principais características do rosto)
-- Em seguida, o script carrega o arquivo banco.json, que funciona como um banco de dados local. Caso o arquivo ainda não exista, um novo será criado. O embedding gerado é então
-- adicionado à lista de rostos cadastrados e o banco é salvo novamente no arquivo JSON.
+- Ao ser executado, ele ativa a webcam e exibe uma janela pedindo para o usuário ajustar o rosto e pressionar a tecla ‘s’ quando estiver pronto para capturar a imagem. Após a captura, a imagem é processada pela biblioteca face_recognition, que gera um embedding facial  - (um vetor numérico que representa as principais características do rosto). Em seguida, o script carrega o arquivo banco.json, que funciona como um banco de dados local. Caso o arquivo ainda não exista, um novo será criado. O embedding gerado é então adicionado à
+- lista de rostos cadastrados e o banco é salvo novamente no arquivo JSON.
 
 ### script.py
 - Esse script implementa um servidor Flask para reconhecimento facial em tempo real, utilizando um banco de rostos previamente cadastrados. Quando o servidor é iniciado, ele fica
