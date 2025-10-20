@@ -58,29 +58,21 @@ Este projeto foi integrado em um **aplicativo mobile em React Native**, permitin
 
 ---
 
-## Funções principais
+## Scripts do projeto 
 
-### **carregar_banco()**
-- Carrega os embeddings faciais salvos no arquivo `banco.json`. Retorna uma lista vazia se o arquivo não existir.
+### cadastrar_rosto.py
+- Ao ser executado, ele ativa a webcam e exibe uma janela pedindo para o usuário ajustar o rosto e pressionar a tecla ‘s’ quando estiver pronto para capturar a imagem.
+- Após a captura, a imagem é processada pela biblioteca face_recognition, que gera um embedding facial (um vetor numérico que representa as principais características do rosto)
+- Em seguida, o script carrega o arquivo banco.json, que funciona como um banco de dados local. Caso o arquivo ainda não exista, um novo será criado. O embedding gerado é então
+- adicionado à lista de rostos cadastrados e o banco é salvo novamente no arquivo JSON.
 
-### **salvar_banco(banco)**
-- Salva os embeddings faciais no arquivo `banco.json` para persistência dos dados.
+### script.py
+- Esse script implementa um servidor Flask para reconhecimento facial em tempo real, utilizando um banco de rostos previamente cadastrados. Quando o servidor é iniciado, ele fica
+- disponível para receber requisições HTTP no endpoint /reconhecer. Ao acessar esse endpoint o sistema executa o processo de validação facial. Primeiro, o script carrega os embeddings
+- salvos no arquivo banco.json, que funciona como o banco de dados local contendo os rostos cadastrados. Em seguida, ativa a webcam e solicita que o usuário ajuste o rosto e pressione
+- ‘s’ para capturar uma imagem. A imagem é então processada para gerar um novo embedding facial, representando o rosto atual. O sistema compara esse embedding com todos os salvos no banco,
+- calculando a distância entre eles — quanto menor a distância, mais semelhante o rosto é. Se a distância entre o rosto capturado e algum rosto do banco for menor que 0.5, o sistema
+- considera que o usuário foi reconhecido e retorna a resposta “autorizado”. Caso contrário, retorna “não autorizado”. Por fim, o resultado é devolvido como uma resposta JSON, permitindo
+- que outras aplicações (como um app mobile) interpretem o retorno e tomem decisões baseadas no reconhecimento facial.
 
-### **gerar_embedding(frame)**
-- Recebe uma imagem (frame), detecta o rosto e gera um embedding normalizado usando `face_recognition`. Retorna None se não detectar rosto.
-
-### **capturar_rosto(caption)**
-- Abre a webcam, mostra a imagem em tempo real e captura um frame quando o usuário pressiona 's'.
-
-### **cadastrar()**
-- Captura o rosto do usuário, gera o embedding e salva no banco (banco.json). Exibe mensagens de sucesso ou falha.
-
-### **validar()**
-- Captura o rosto do usuário, gera o embedding e compara com os embeddings cadastrados. Retorna no console `"autorizada"` ou `"não autorizada"`.
-
-### **main()**
-- Menu interativo para o usuário escolher entre cadastrar um novo rosto, validar um rosto ou sair do programa.
-
----
-
-
+  
